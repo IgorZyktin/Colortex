@@ -110,7 +110,7 @@ palette = {
             100: "W"
 }
 """
-    This gives 60% boost of calculations!
+    This gives 60% boost for calculations!
     
                                           for 100000 repeats
     int(sum(rgb_color) / 3 / 255 * 100): 16.004555702209473 sec.
