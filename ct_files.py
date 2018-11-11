@@ -61,7 +61,7 @@ def get_filenames(filenames=None):
                 verified_files.append({
                     'scale': subscale,
                     'path': full_path,
-                    'name': '[' + str(subscale).rjust(2, '0') + 'x] ' + name,
+                    'name': '[' + str(subscale).rjust(2, '0') + '] ' + name,
                     'ext': ext,
                     'filename': filename
                 })
