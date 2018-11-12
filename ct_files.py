@@ -3,10 +3,20 @@
 """
 import os
 import re
+import psutil
 PATH = os.path.abspath(os.path.curdir)
 INPUT_PATH = os.path.join('input', '')
 OUTPUT_PATH = os.path.join('output', '')
 USED_PATH = os.path.join('used', '')
+
+
+def memory_consumption():
+    """
+        Show memory consumption in megabytes
+    """
+    process = psutil.Process(os.getpid())
+    used_memory = process.memory_info().rss
+    return str(round(used_memory / 1024 / 1024, 2)) + 'mb    '
 
 
 def extract_scale(name: str) -> list:
@@ -125,7 +135,7 @@ def save_image(file_dict: dict, image, now: str, end: str) -> int:
 
     new_name = unique_name(file_dict['name'], 'png')
     image.save(os.path.join(OUTPUT_PATH, new_name))
-    print(f'File saved ({now} of {end}): {new_name}')
+    print(f'\rImage file saved ({now} of {end}): {new_name}')
     return 1
 
 
@@ -139,5 +149,5 @@ def save_gif(file_dict: dict, frames: list, now: str, end: str) -> int:
     new_name = unique_name(file_dict['name'], 'gif')
     full_name = os.path.join(OUTPUT_PATH, new_name)
     frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
-    print(f'GIF image file saved ({now} of {end}): {new_name}')
+    print(f'\r  GIF file saved ({now} of {end}): {new_name}')
     return 1
