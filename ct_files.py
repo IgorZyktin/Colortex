@@ -131,4 +131,3 @@ def save_gif(file_dict, frames):
     frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
     print(f'GIF image file saved: {new_name}')
     return 1
-
