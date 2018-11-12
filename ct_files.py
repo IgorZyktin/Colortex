@@ -58,6 +58,9 @@ def get_filenames() -> list:
             name = filename.split('.')[0]
             ext = filename.split('.')[-1]
 
+            if ext.lower() not in ['bmp', 'jpg', 'png', 'gif']:
+                continue
+
             scales_list = extract_scale(name)
 
             pos = name.find(']')
