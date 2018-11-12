@@ -35,14 +35,18 @@ def extract_scale(name):
     return [6]
 
 
-def get_filenames(filenames=None):
+def get_filenames() -> list:
     """
         Search for local files
     """
+    if not os.path.isdir(INPUT_PATH):
+        return []
 
-    if not filenames:
-        filenames = os.listdir(INPUT_PATH)
-        filenames = map(str.lower, filenames)
+    if not os.path.exists(OUTPUT_PATH):
+        os.mkdir(OUTPUT_PATH)
+
+    filenames = os.listdir(INPUT_PATH)
+    filenames = map(str.lower, filenames)
 
     verified_files = []
 
@@ -65,7 +69,8 @@ def get_filenames(filenames=None):
                     'path': full_path,
                     'name': '[' + str(subscale).rjust(2, '0') + '] ' + name,
                     'ext': ext,
-                    'filename': filename
+                    'filename': filename,
+                    'last_image': '[' + str(max(scales_list)).rjust(2, '0') + '] ' + name
                 })
 
     if verified_files:
@@ -96,6 +101,8 @@ def move_file(file_dict):
     """
         Move file from 'input' to 'used'
     """
+    if file_dict['name'] != file_dict['last_image']:
+        return
     source = os.path.join(PATH, INPUT_PATH, file_dict['filename'])
     resulting_name = unique_name(file_dict['name'], file_dict['ext'])
     destination = os.path.join(PATH, USED_PATH, resulting_name)
