@@ -1,10 +1,10 @@
 """
     Images processing module
 """
-import ct_files
-from ct_palette import palette
-from ct_palette import density_list
 from PIL import Image, ImageDraw, ImageFont
+import ct_files
+from ct_palette import PALETTE
+from ct_palette import DENSITY_LIST
 
 TILE_HEIGHT = 16
 TILE_WIDTH = 16
@@ -38,17 +38,17 @@ def make_image(source_image, file_dict):
 
     position = 0
 
-    for y in range(height):
-        for x in range(width):
-            """ Creating new symbolic tile  """
-            rgb_color = source_image.getpixel((x, y))
-            density = density_list[sum(rgb_color)]
+    for y_coord in range(height):
+        for x_coord in range(width):
+            # Creating new symbolic tile
+            rgb_color = source_image.getpixel((x_coord, y_coord))
+            density = DENSITY_LIST[sum(rgb_color)]
 
             text_tile = Image.new(mode="RGB", size=(TILE_WIDTH, TILE_HEIGHT), color=(0, 0, 0))
             textdraw = ImageDraw.ImageDraw(text_tile, "RGB")
-            textdraw.text((2, 0), text=palette[density], font=font, fill=rgb_color)
+            textdraw.text((2, 0), text=PALETTE[density], font=font, fill=rgb_color)
 
-            output_image.paste(text_tile, (x * TILE_WIDTH, y * TILE_HEIGHT))
+            output_image.paste(text_tile, (x_coord * TILE_WIDTH, y_coord * TILE_HEIGHT))
 
             position += 1
 
@@ -87,13 +87,13 @@ def make_frames(source_image, file_dict):
 
     frames = []
 
-    for x in range(total_frames + 1):
-        print(f'\rFrame: {str(x)} of {str(source_image.n_frames)}', end='')
+    for frame in range(total_frames + 1):
+        print(f'\rFrame: {str(frame)} of {str(source_image.n_frames)}', end='')
         try:
             if not source_image.getpalette():
                 source_image.putpalette(gif_palette)
 
-            source_image.seek(x)
+            source_image.seek(frame)
             empty_frame = Image.new('RGB', source_image.size)
 
             if mode == 'partial' and last_frame:
@@ -128,4 +128,3 @@ def convert(file_dict):
 
     ct_files.move_file(file_dict)
     return status
-
