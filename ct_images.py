@@ -109,14 +109,18 @@ def make_frames(source_image, file_dict: dict) -> list:
             last_frame = new_frame
             frames.append(new_frame)
         except EOFError:
-            break
+            return frames
+        except OSError:
+            print()
+            print(f'\r>>> Unable to save frame {frame}. Check if you have enough')
+            print(f'>>> free space on the hard drive and required access permissions.')
+            print()
         except MemoryError:
             print()
             print(f'\r>>> Run out of memory on frame {frame}.')
             print(f'>>> Try to save this image with bigger scaling factor.')
             print()
-            return []
-    return frames
+    return []
 
 
 def convert(file_dict: dict, now: int, end: int) -> int:
