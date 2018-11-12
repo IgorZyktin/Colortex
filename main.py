@@ -15,7 +15,7 @@ def main():
     """
     Main flow
     """
-    print('[Colortex image conversion script]')
+    print('--- Colortex image conversion script ---')
     print()
 
     total_converted = 0
@@ -25,8 +25,8 @@ def main():
         print('Nothing to convert')
         return
 
-    for file_dict in local_files:
-        total_converted += ct_images.convert(file_dict)
+    for i, file_dict in enumerate(local_files, start=1):
+        total_converted += ct_images.convert(file_dict, i, len(local_files))
 
     if total_converted:
         print(f'Conversion complete, {total_converted} files converted.')
