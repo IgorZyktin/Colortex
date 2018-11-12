@@ -9,7 +9,7 @@ OUTPUT_PATH = os.path.join('output', '')
 USED_PATH = os.path.join('used', '')
 
 
-def extract_scale(name):
+def extract_scale(name: str) -> list:
     """
         Extract scale out of the filename
         For example: "[10] some_file.png" --> 10
@@ -83,7 +83,7 @@ def get_filenames() -> list:
     return verified_files
 
 
-def unique_name(old_name, ext):
+def unique_name(old_name: str, ext: str) -> str:
     """
         Avoid overwriting
     """
@@ -97,7 +97,7 @@ def unique_name(old_name, ext):
     return new_name + '.' + ext
 
 
-def move_file(file_dict):
+def move_file(file_dict: dict):
     """
         Move file from 'input' to 'used'
     """
@@ -113,7 +113,7 @@ def move_file(file_dict):
     os.rename(source, destination)
 
 
-def save_image(file_dict, image):
+def save_image(file_dict: dict, image, now: str, end: str) -> int:
     """
         Saving png
     """
@@ -122,11 +122,11 @@ def save_image(file_dict, image):
 
     new_name = unique_name(file_dict['name'], 'png')
     image.save(os.path.join(OUTPUT_PATH, new_name))
-    print(f'File saved: {new_name}')
+    print(f'File saved ({now} of {end}): {new_name}')
     return 1
 
 
-def save_gif(file_dict, frames):
+def save_gif(file_dict: dict, frames: list, now: str, end: str) -> int:
     """
         Saving gif
     """
@@ -136,5 +136,5 @@ def save_gif(file_dict, frames):
     new_name = unique_name(file_dict['name'], 'gif')
     full_name = os.path.join(OUTPUT_PATH, new_name)
     frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
-    print(f'GIF image file saved: {new_name}')
+    print(f'GIF image file saved ({now} of {end}): {new_name}')
     return 1
