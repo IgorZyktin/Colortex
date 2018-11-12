@@ -88,7 +88,12 @@ def make_frames(source_image, file_dict: dict) -> list:
     frames = []
 
     for frame in range(total_frames + 1):
-        print(f'\rFrame: {str(frame)} of {str(source_image.n_frames)}', end='')
+
+        memory = ct_files.memory_consumption()
+        now = str(frame)
+        end = str(source_image.n_frames)
+        print(f'\rFrame: {now} of {end}, memory use: {memory}   ', end='')
+
         try:
             if not source_image.getpalette():
                 source_image.putpalette(gif_palette)
@@ -105,7 +110,12 @@ def make_frames(source_image, file_dict: dict) -> list:
             frames.append(new_frame)
         except EOFError:
             break
-    print()
+        except MemoryError:
+            print()
+            print(f'\r>>> Run out of memory on frame {frame}.')
+            print(f'>>> Try to save this image with bigger scaling factor.')
+            print()
+            return []
     return frames
 
 
@@ -124,7 +134,8 @@ def convert(file_dict: dict, now: int, end: int) -> int:
 
         if file_dict.get('ext') == 'gif':
             frames = make_frames(source_image=image, file_dict=file_dict)
-            status = ct_files.save_gif(file_dict, frames, s_now, s_end)
+            if frames:
+                status = ct_files.save_gif(file_dict, frames, s_now, s_end)
 
         elif file_dict.get('ext') in ['bmp', 'jpg', 'png']:
             converted_image = make_image(source_image=image, file_dict=file_dict)
