@@ -25,7 +25,9 @@ def extract_scale(name):
             start = input_number.split('-')[0]
             end = input_number.split('-')[-1]
             if start.isdigit() and end.isdigit():
-                return list(range(int(start), int(end) + 1))
+                start = max([1, int(start)])
+                end = min([50, int(end)])
+                return list(range(start, end + 1))
 
         elif input_number.isdigit():
             return [int(input_number)]
@@ -94,7 +96,6 @@ def move_file(file_dict):
     """
         Move file from 'input' to 'used'
     """
-    return
     source = os.path.join(PATH, INPUT_PATH, file_dict['filename'])
     resulting_name = unique_name(file_dict['name'], file_dict['ext'])
     destination = os.path.join(PATH, USED_PATH, resulting_name)
@@ -102,8 +103,6 @@ def move_file(file_dict):
     if not os.path.exists(os.path.join(PATH, USED_PATH)):
         os.mkdir(os.path.join(PATH, USED_PATH))
 
-    # if os.path.exists(destination):
-    #     os.remove(destination)
     os.rename(source, destination)
 
 
