@@ -111,7 +111,7 @@ def make_frames(source_image, file_dict):
 
 def convert(file_dict):
     """
-        Loading file for image
+        Load file for the image
     """
     status = 0
 
