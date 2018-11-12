@@ -11,7 +11,7 @@ TILE_WIDTH = 16
 FONT_SIZE = 20
 
 
-def calculate_new_size(size, file_dict):
+def calculate_new_size(size, file_dict: dict) -> (int, int):
     """
         Downscaling the file
     """
@@ -22,7 +22,7 @@ def calculate_new_size(size, file_dict):
     return output_width, output_height
 
 
-def make_image(source_image, file_dict):
+def make_image(source_image, file_dict: dict):
     """
         Main computation cycle
     """
@@ -76,7 +76,7 @@ def analyse_image(image):
     return results
 
 
-def make_frames(source_image, file_dict):
+def make_frames(source_image, file_dict: dict) -> list:
     """
         Extract frames from GIF
     """
@@ -109,22 +109,26 @@ def make_frames(source_image, file_dict):
     return frames
 
 
-def convert(file_dict):
+def convert(file_dict: dict, now: int, end: int) -> int:
     """
         Load file for the image
     """
     status = 0
+
+    digits = len(str(end))
+    s_now = str(now).rjust(digits, '0')
+    s_end = str(end).rjust(digits, '0')
 
     with open(file_dict['path'], mode='rb') as file:
         image = Image.open(file)
 
         if file_dict.get('ext') == 'gif':
             frames = make_frames(source_image=image, file_dict=file_dict)
-            status = ct_files.save_gif(file_dict, frames)
+            status = ct_files.save_gif(file_dict, frames, s_now, s_end)
 
         elif file_dict.get('ext') in ['bmp', 'jpg', 'png']:
             converted_image = make_image(source_image=image, file_dict=file_dict)
-            status = ct_files.save_image(file_dict, converted_image)
+            status = ct_files.save_image(file_dict, converted_image, s_now, s_end)
 
     ct_files.move_file(file_dict)
     return status
