@@ -134,8 +134,13 @@ def save_image(file_dict: dict, image, now: str, end: str) -> int:
         return 0
 
     new_name = unique_name(file_dict['name'], 'png')
-    image.save(os.path.join(OUTPUT_PATH, new_name))
-    print(f'\rImage file saved ({now} of {end}): {new_name}')
+
+    try:
+        image.save(os.path.join(OUTPUT_PATH, new_name))
+        print(f'\rImage file saved ({now} of {end}): {new_name}')
+    except OSError:
+        print(f'\r              Unable to save file:{new_name}')
+        return 0
     return 1
 
 
@@ -148,6 +153,11 @@ def save_gif(file_dict: dict, frames: list, now: str, end: str) -> int:
 
     new_name = unique_name(file_dict['name'], 'gif')
     full_name = os.path.join(OUTPUT_PATH, new_name)
-    frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
-    print(f'\r  GIF file saved ({now} of {end}): {new_name}')
+
+    try:
+        frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
+        print(f'\r  GIF file saved ({now} of {end}): {new_name}')
+    except OSError:
+        print(f'\r              Unable to save file:{new_name}')
+        return 0
     return 1
