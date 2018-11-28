@@ -16,14 +16,14 @@ def memory_consumption():
     """
     process = psutil.Process(os.getpid())
     used_memory = process.memory_info().rss
-    return str(round(used_memory / 1024 / 1024, 2)) + 'mb    '
+    return str(round(used_memory / 1024 / 1024, 2)) + ' mb.    '
 
 
 def extract_scale(name: str) -> list:
     """
         Extract scale out of the filename
-        For example: "[10] some_file.png" --> 10
-        For example: "[5-8] some_file.png" --> 5, 6, 7, 8
+        "[10] some_file.png" --> 10
+        "[5-8] some_file.png" --> 5, 6, 7, 8
     """
     pattern = r'(?<=\[).+?(?=\])'
     data = re.search(pattern, name)
@@ -68,7 +68,7 @@ def get_filenames() -> list:
             name = filename.split('.')[0]
             ext = filename.split('.')[-1]
 
-            if ext.lower() not in ['bmp', 'jpg', 'png', 'gif']:
+            if ext.lower() not in ['bmp', 'jpg', 'jpeg', 'png', 'gif']:
                 continue
 
             scales_list = extract_scale(name)
@@ -106,7 +106,7 @@ def unique_name(old_name: str, ext: str) -> str:
     if os.path.isfile(os.path.join(path, new_name + '.' + ext)):
         while os.path.isfile(os.path.join(path, new_name + '.' + ext)):
             var += 1
-            new_name = old_name + '_(' + str(var) + ')'
+            new_name = old_name + '_(' + str(var).rjust(2, '0') + ')'
     return new_name + '.' + ext
 
 
@@ -137,7 +137,9 @@ def save_image(file_dict: dict, image, now: str, end: str) -> int:
 
     try:
         image.save(os.path.join(OUTPUT_PATH, new_name))
-        print(f'\rImage file saved ({now} of {end}): {new_name}')
+        size = os.path.getsize(os.path.join(OUTPUT_PATH, new_name))
+        size = round(size / 1024 / 1024, 2)
+        print(f'\rImage file saved ({now} of {end}): {new_name}, size: {size:.2f} mb.')
     except OSError:
         print(f'\r              Unable to save file:{new_name}')
         return 0
@@ -156,7 +158,9 @@ def save_gif(file_dict: dict, frames: list, now: str, end: str) -> int:
 
     try:
         frames[0].save(full_name, save_all=True, append_images=frames[1:], duration=100, loop=0)
-        print(f'\r  GIF file saved ({now} of {end}): {new_name}')
+        size = os.path.getsize(os.path.join(OUTPUT_PATH, new_name))
+        size = round(size / 1024 / 1024, 2)
+        print(f'\r  GIF file saved ({now} of {end}): {new_name}, size: {size:.2f} mb.')
     except OSError:
         print(f'\r              Unable to save file:{new_name}')
         return 0
