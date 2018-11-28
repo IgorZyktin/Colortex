@@ -107,7 +107,12 @@ def make_frames(source_image, file_dict: dict) -> list:
             empty_frame.paste(source_image, (0, 0))
             new_frame = make_image(source_image=empty_frame, file_dict=file_dict)
             last_frame = new_frame
-            frames.append(new_frame)
+
+            if not frames:
+                frames.append((new_frame.width, new_frame.height))
+
+            frames.append(new_frame.tobytes())
+
         except EOFError:
             return frames
         except OSError:
@@ -138,10 +143,17 @@ def convert(file_dict: dict, now: int, end: int) -> int:
 
         if file_dict.get('ext') == 'gif':
             frames = make_frames(source_image=image, file_dict=file_dict)
-            if frames:
-                status = ct_files.save_gif(file_dict, frames, s_now, s_end)
 
-        elif file_dict.get('ext') in ['bmp', 'jpg', 'png']:
+            if frames:
+                converted_frames = []
+                size = frames[0]
+
+                for raw_frame in frames[1:]:
+                    converted_frames.append(Image.frombytes(mode="RGB", size=size, data=raw_frame))
+
+                status = ct_files.save_gif(file_dict, converted_frames, s_now, s_end)
+
+        elif file_dict.get('ext') in ['bmp', 'jpg', 'png', 'jpeg']:
             converted_image = make_image(source_image=image, file_dict=file_dict)
             status = ct_files.save_image(file_dict, converted_image, s_now, s_end)
 
