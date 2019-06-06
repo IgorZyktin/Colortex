@@ -50,6 +50,15 @@ def get_filenames() -> list:
         Search for local files
     """
     if not os.path.isdir(INPUT_PATH):
+        print (f"Could not find input directory ({INPUT_PATH})! Creating it for you...")
+
+        try:
+            os.mkdir(INPUT_PATH)
+        except OSError:
+            print(f'Creation of the "{INPUT_PATH}" directory failed')
+        else:
+            print(f"Successfully created the "{INPUT_PATH}" directory")
+            print("Now add your .bmp, .png, .jpg or .gif images to this folder and restart script")
         return []
 
     if not os.path.exists(OUTPUT_PATH):
