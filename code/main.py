@@ -7,8 +7,7 @@
         https://gist.github.com/almost/d2832d0998ad9dfec2cacef934e7d247
 
 """
-import ct_images
-import ct_files
+from code import ct_files, ct_images
 
 
 def main():

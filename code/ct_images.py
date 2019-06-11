@@ -2,9 +2,9 @@
     Images processing module
 """
 from PIL import Image, ImageDraw, ImageFont
-import ct_files
-from ct_palette import PALETTE
-from ct_palette import DENSITY_LIST
+from code import ct_files
+from code.ct_palette import PALETTE
+from code.ct_palette import DENSITY_LIST
 
 TILE_HEIGHT = 16
 TILE_WIDTH = 16
