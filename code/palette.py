@@ -109,15 +109,7 @@ PALETTE = {
     99: "W",
     100: "W"
 }
-"""
-    This gives 60% boost for calculations!
 
-                                          for 100000 repeats
-    int(sum(rgb_color) / 3 / 255 * 100): 16.004555702209473 sec.
-           density_dict[sum(rgb_color)]: 10.126927852630615 sec.
-           density_list[sum(rgb_color)]:  9.538363218307495 sec.
-        numpy.array() from density_list: 11.582798957824707 sec.
-"""
 DENSITY_LIST = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
                 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6,
                 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10,

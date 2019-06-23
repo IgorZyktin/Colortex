@@ -3,8 +3,8 @@
 """
 from PIL import Image, ImageDraw, ImageFont
 from code import ct_files
-from code.ct_palette import PALETTE
-from code.ct_palette import DENSITY_LIST
+from code.palette import PALETTE
+from code.palette import DENSITY_LIST
 
 TILE_HEIGHT = 16
 TILE_WIDTH = 16
