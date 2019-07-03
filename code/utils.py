@@ -4,11 +4,17 @@
 
 """
 # builtin modules
+from typing import Union
 from pathlib import Path
 
 # third-party modules
 # import numpy as np
 from PIL import Image
+
+
+# def save_image(image_data):
+#     im = Image.fromarray(image_data)
+#     im.convert("RGB").save("your_file.png")
 
 
 def open_image(path: str) -> Image:
@@ -37,44 +43,47 @@ def unique_name(filename: Path) -> str:
     """
     Ensure we're not overwriting anything
     """
-    old_path = filename
-    cur_path = old_path
     i = 0
-    while cur_path.exists():
-        filename = old_path.stem + f'_{i:02d}' + old_path.suffix
-        cur_path = Path(filename)
+    name = filename.stem
+    while filename.exists():
+        suffix = filename.suffix
+        filename = filename.with_name(f'{name}_{i:02d}{suffix}')
         i += 1
     return filename
 
 
-# def save_image(image_data):
-#     im = Image.fromarray(image_data)
-#     im.convert("RGB").save("your_file.png")
-
-
-# noinspection PyBroadException
-def save_text_file(filename: str, data: str):
+def save_text_file(filename: str, data: str, overwrite: bool = False) -> None:
     """
     Save text file
     """
-    try:
-        filename = Path('output_files') / filename
-        with open(unique_name(filename), mode='w', encoding='utf-8') as file:
-            file.write(data)
-    except Exception as err:
-        print(f'Unable to save text file: "{filename}"')
-        print(f'                  Reason: {err.args[0]}')
+    save_file(filename, data, {'mode': 'w', 'encoding': 'utf-8'}, 'text', overwrite)
 
 
-# noinspection PyBroadException
-def save_binary_file(filename: str, data: bytes):
+def save_binary_file(filename: str, data: bytes, overwrite: bool = False) -> None:
     """
     Save binary object as a file
     """
+    save_file(filename, data, {'mode': 'wb'}, 'binary', overwrite)
+
+
+# noinspection PyBroadException
+def save_file(filename: str, data: Union[str, bytes],
+              settings: dict, kind: str, overwrite: bool) -> None:
+    """
+    Generic file saving function
+    """
+    if not Path('output_files').exists():
+        Path('output_files').mkdir()
+
+    filename = Path('output_files') / filename
+    if not overwrite:
+        filename = unique_name(filename)
+
     try:
-        filename = Path('output_files') / filename
-        with open(unique_name(filename), mode='wb') as file:
+        with open(filename, **settings) as file:
             file.write(data)
+            print(f'{filename} has been saved.')
     except Exception as err:
-        print(f'Unable to save binary file: "{filename}"')
-        print(f'                    Reason: {err.args[0]}')
+        spacer = '  ' if kind == 'text' else ''
+        print(f'Unable to save {kind} file: "{filename}"')
+        print(f'                   {spacer}Reason: {err.args[0]}')

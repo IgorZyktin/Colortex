@@ -7,13 +7,13 @@
         https://gist.github.com/almost/d2832d0998ad9dfec2cacef934e7d247
 
 """
-# builtin modules
+# built-in modules
 import argparse
 from pathlib import Path
 
 # project modules
 from utils import save_binary_file, save_text_file
-from text_renderer import image_to_txt
+from txt_renderer import image_to_txt
 
 
 if __name__ == '__main__':

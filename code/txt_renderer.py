@@ -12,17 +12,17 @@
 
         invert - flag to invert colors (applied on black and white image)
 """
-# builtin modules
-from utils import open_image
+# built-in modules
+import argparse
+from pathlib import Path
 
 # third-party modules
 import numpy as np
 from PIL import Image
 
 # project modules
-from palette import DENSITY_LIST, PALETTE
-
-density_list = np.array(DENSITY_LIST)
+from palette import PALETTE
+from utils import open_image, save_text_file
 
 
 def image_to_txt(image_path: str, width: int, threshold: int = 255, invert: bool = False) -> str:
@@ -172,3 +172,24 @@ def array_to_string(image: np.array) -> str:
     lines = [''.join(item) for item in image.astype(str)]
     result = '\n'.join(lines)
     return result
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Rendering settings.')
+    parser.add_argument('-path', type=str, help='Path to an image file.')
+    parser.add_argument('-width', type=int, help='Width of the output document (characters)')
+    parser.add_argument('-threshold', type=int, default=255, help='Cut brightness below this.')
+    parser.add_argument('-invert', type=int, default=0, help='Invert colors before processing.')
+    parser.add_argument('-overwrite', type=int, default=0,
+                        help='Preserve existing files with the same name.')
+    arguments = parser.parse_args()
+
+    path = arguments.path
+    data = image_to_txt(
+        image_path=path,
+        width=arguments.width,
+        threshold=arguments.threshold,
+        invert=bool(arguments.invert)
+    )
+
+    save_text_file(Path(path).with_suffix('.txt'), data, bool(arguments.overwrite))
